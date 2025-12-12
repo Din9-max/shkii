@@ -10,19 +10,19 @@ const puzzleImages = [
     {
         id: 1,
         name: "Новогодняя ёлка",
-        url: "image/pazzl_1.jpg",
+        url: "pazzl_1.jpg",
        
     },
     {
         id: 2,
         name: "Санта Клаус",
-        url: "image/pazzl_2.jpg"
+        url: "pazzl_2.jpg"
        
     },
     {
         id: 3,
         name: "Новогодний венок",
-        url: "image/pazzl_3.jpg"
+        url: "pazzl_3.jpg"
     
     },
    
@@ -1311,4 +1311,5 @@ function setLoadingImage(imageUrl) {
 }
 
 // Экспортируем функцию для замены картинки загрузки
+
 window.setLoadingImage = setLoadingImage;
