@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новогоднее спасение!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c1b33 0%, #1a3a5f 100%);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><polygon points="50,0 61,35 98,35 68,57 79,92 50,70 21,92 32,57 2,35 39,35" fill="%23ffffff22"/></svg>');
+            color: #fff;
+        }
+
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 10, 30, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-out;
+            padding: 20px;
+        }
+
+        .dialog-container {
+            background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+            width: 90%;
+            max-width: 550px; /* Уменьшили максимальную ширину */
+            max-height: 80vh; /* Ограничили высоту */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 50px rgba(0, 150, 255, 0.3),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 2px solid #4dabf7;
+            animation: slideUp 0.6s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dialog-header {
+            background: linear-gradient(90deg, #c92a2a 0%, #e03131 100%);
+            padding: 15px 20px; /* Уменьшили padding */
+            text-align: center;
+            border-bottom: 3px solid #ffd8a8;
+            position: relative;
+            flex-shrink: 0; /* Запрещаем сжатие шапки */
+        }
+
+        .dialog-header h1 {
+            margin: 0;
+            font-size: 1.8em; /* Уменьшили размер шрифта */
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .header-decoration {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .snowflake {
+            color: #a5d8ff;
+            font-size: 1.2em; /* Уменьшили снежинки */
+            animation: sparkle 2s infinite;
+        }
+
+        .dialog-content {
+            padding: 20px; /* Уменьшили padding */
+            font-size: 1.1em; /* Уменьшили размер шрифта */
+            line-height: 1.6;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            overflow-y: auto; /* Добавили скроллинг */
+            flex-grow: 1; /* Занимаем всё доступное пространство */
+            scrollbar-width: none; /* Firefox - скрываем скроллбар */
+            -ms-overflow-style: none; /* IE/Edge - скрываем скроллбар */
+        }
+
+        /* Скрываем скроллбар для Webkit браузеров */
+        .dialog-content::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            background: transparent;
+        }
+
+        .story-text {
+            margin-bottom: 18px; /* Уменьшили отступы */
+            color: #e7f5ff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            font-size: 1.1em; /* Уменьшили размер шрифта */
+        }
+
+        .highlight {
+            color: #ffd8a8;
+            font-weight: bold;
+        }
+
+        .character-name {
+            display: inline-block;
+            color: #69db7c;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            padding: 1px 4px;
+            border-radius: 3px;
+            background: rgba(105, 219, 124, 0.1);
+        }
+
+        .quote {
+            font-style: italic;
+            color: #ffc9c9;
+            border-left: 3px solid #ff6b6b;
+            padding-left: 12px;
+            margin: 15px 0;
+            font-size: 1.2em; /* Уменьшили размер шрифта */
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 0 6px 6px 0;
+        }
+
+        .warning {
+            color: #ffa8a8;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            margin: 15px 0;
+            font-size: 1.1em; /* Уменьшили размер шрифта */
+            padding: 12px;
+            background: rgba(255, 168, 168, 0.1);
+            border-radius: 6px;
+            border: 1px solid rgba(255, 168, 168, 0.3);
+        }
+
+        .dialog-footer {
+            background: rgba(0, 20, 40, 0.7);
+            padding: 20px; /* Уменьшили padding */
+            text-align: center;
+            border-top: 2px solid #339af0;
+            flex-shrink: 0; /* Запрещаем сжатие футера */
+        }
+
+        .mission-button {
+            background: linear-gradient(to right, #ff6b6b, #ff8787);
+            color: white;
+            border: none;
+            padding: 14px 40px; /* Уменьшили padding */
+            font-size: 1.1em; /* Уменьшили размер шрифта */
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .mission-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.6);
+            background: linear-gradient(to right, #ff8787, #ffa8a8);
+        }
+
+        .mission-button:active {
+            transform: translateY(1px);
+        }
+
+        .snowflake-animated {
+            position: absolute;
+            color: #a5d8ff;
+            opacity: 0.7;
+            font-size: 1em; /* Уменьшили анимированные снежинки */
+            pointer-events: none;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .dialog-container {
+                width: 95%;
+                margin: 10px;
+                max-width: 500px;
+            }
+            
+            .dialog-content {
+                padding: 15px;
+                font-size: 1em;
+            }
+            
+            .dialog-header h1 {
+                font-size: 1.5em;
+            }
+            
+            .mission-button {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+            
+            .dialog-header {
+                padding: 12px 15px;
+            }
+            
+            .snowflake {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dialog-container {
+                max-width: 400px;
+            }
+            
+            .dialog-header h1 {
+                font-size: 1.3em;
+            }
+            
+            .mission-button {
+                padding: 10px 25px;
+                font-size: 0.9em;
+                width: 90%;
+                max-width: 250px;
+            }
+            
+            .story-text {
+                font-size: 1em;
+            }
+            
+            .quote {
+                font-size: 1.1em;
+                margin: 12px 0;
+            }
+            
+            .warning {
+                font-size: 1em;
+                padding: 10px;
+            }
+            
+            .dialog-overlay {
+                padding: 10px;
+            }
+        }
+
+        /* Для очень маленьких экранов */
+        @media (max-height: 600px) {
+            .dialog-container {
+                max-height: 90vh;
+            }
+            
+            .dialog-header {
+                padding: 10px 15px;
+            }
+            
+            .dialog-content {
+                padding: 12px 15px;
+            }
+            
+            .dialog-footer {
+                padding: 15px;
+            }
+            
+            .story-text {
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dialog-overlay">
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="header-decoration">
+                <span class="snowflake">❄</span>
+                <span class="snowflake">❄</span>
+                <span class="snowflake">❄</span>
+            </div>
+            <h1>🎄 НОВОГОДНЯЯ ТАЙНА 🎄</h1>
+            <div class="header-decoration">
+                <span class="snowflake">❄</span>
+                <span class="snowflake">❄</span>
+                <span class="snowflake">❄</span>
+            </div>
+        </div>
+        
+        <div class="dialog-content">
+            <p class="story-text">
+                На лесной поляне шла предпраздничная подготовка. 
+                <span class="character-name">Медвежонок</span> проверял гирлянды, 
+                <span class="character-name">Снеговик</span> лепил зайцев, а 
+                <span class="character-name">Снегурочка</span> развешивала игрушки.
+            </p>
+            
+            <p class="story-text">
+                Внезапно появилась <span class="highlight">Лошадь — символ года</span>. 
+                Но в её взгляде не было добра, лишь холодная решимость.
+            </p>
+            
+            <div class="quote">
+                «Этот год будет моим», — прошептала она
+            </div>
+            
+            <p class="story-text">
+                И, схватив плюшевого медвежонка <span class="character-name"></span>, 
+                умчалась прочь.
+            </p>
+            
+            <div class="warning">
+                ⚠️ Ужас повис в воздухе. Согласно легенде, без этого талисмана 
+                Новый год мог не наступить!
+            </div>
+            
+            <p class="story-text" style="margin-top: 25px; font-size: 1.2em; color: #69db7c;">
+                Друзьям нужно было его спасти. Приключение начинается...
+            </p>
+        </div>
+        
+        <div class="dialog-footer">
+            <button class="mission-button" onclick="document.location='game1.html'" ">
+                🐻 Начать спасательную миссию! 🎅
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    function createSnowflakes() {
+        const overlay = document.querySelector('.dialog-overlay');
+        for (let i = 0; i < 25; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake-animated';
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.top = Math.random() * 100 + '%';
+            snowflake.style.animationDelay = Math.random() * 5 + 's';
+            snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+            snowflake.style.fontSize = (Math.random() * 0.6 + 0.7) + 'em';
+            overlay.appendChild(snowflake);
+        }
+    }
+
+    function startMission() {
+        const dialog = document.querySelector('.dialog-overlay');
+        dialog.style.animation = 'fadeOut 0.5s ease-out forwards';
+        
+        // Здесь можно добавить логику начала игры
+        setTimeout(() => {
+            alert('Миссия начинается! Собери команду и отправляйся спасать Мишонка!');
+            // В реальной игре здесь будет переход к игровому процессу
+            // dialog.style.display = 'none';
+        }, 500);
+    }
+
+    // Инициализация снежинок при загрузке
+    window.addEventListener('DOMContentLoaded', createSnowflakes);
+
+    // Добавляем стиль для анимации исчезновения
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Добавляем плавный скроллинг при необходимости
+    const dialogContent = document.querySelector('.dialog-content');
+    let isScrolling = false;
+    
+    dialogContent.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        
+        if (!isScrolling) {
+            isScrolling = true;
+            const delta = e.deltaY * 0.5; // Уменьшаем скорость скролла
+            
+            this.scrollBy({
+                top: delta,
+                behavior: 'smooth'
+            });
+            
+            setTimeout(() => {
+                isScrolling = false;
+            }, 100);
+        }
+    });
+    
+    // Также поддерживаем touch-собывания для мобильных устройств
+    let touchStartY = 0;
+    
+    dialogContent.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    dialogContent.addEventListener('touchmove', function(e) {
+        if (e.cancelable) {
+            e.preventDefault();
+        }
+        const touchY = e.touches[0].clientY;
+        const deltaY = touchStartY - touchY;
+        
+        this.scrollTop += deltaY * 1.5;
+        touchStartY = touchY;
+    }, { passive: false });
+</script>
+
+</body>
+</html>

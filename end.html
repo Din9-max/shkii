@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новогодний финал</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c1b33 0%, #1a3a5f 100%);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><polygon points="50,0 61,35 98,35 68,57 79,92 50,70 21,92 32,57 2,35 39,35" fill="%23ffffff22"/></svg>');
+            color: #fff;
+        }
+
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 10, 30, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease-out;
+            padding: 20px;
+        }
+
+        .dialog-container {
+            background: linear-gradient(145deg, #1e3c72 0%, #2a5298 100%);
+            width: 90%;
+            max-width: 550px;
+            max-height: 80vh;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 50px rgba(0, 150, 255, 0.3),
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 2px solid #4dabf7;
+            animation: slideUp 0.6s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dialog-header {
+            background: linear-gradient(90deg, #2a8fdb 0%, #36b1ff 100%);
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 3px solid #ffd8a8;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .dialog-header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .header-decoration {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .snowflake {
+            color: #a5d8ff;
+            font-size: 1.2em;
+            animation: sparkle 2s infinite;
+        }
+
+        .dialog-content {
+            padding: 25px;
+            font-size: 1.15em;
+            line-height: 1.7;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            overflow-y: auto;
+            flex-grow: 1;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .dialog-content::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            background: transparent;
+        }
+
+        .story-text {
+            margin-bottom: 20px;
+            color: #e7f5ff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight {
+            color: #ffd8a8;
+            font-weight: bold;
+        }
+
+        .character-name {
+            display: inline-block;
+            color: #69db7c;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(105, 219, 124, 0.15);
+            margin: 0 2px;
+        }
+
+        .horse-speech {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            font-style: italic;
+            position: relative;
+        }
+
+        .horse-speech::before {
+            content: '💬';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+        }
+
+        .happy-ending {
+            background: rgba(105, 219, 124, 0.1);
+            border: 2px dashed rgba(105, 219, 124, 0.4);
+            padding: 18px;
+            margin: 25px 0;
+            border-radius: 10px;
+            color: #c3f7d5;
+            font-weight: bold;
+            animation: glow 3s infinite alternate;
+        }
+
+        .final-message {
+            margin-top: 25px;
+            padding: 15px;
+            background: linear-gradient(90deg, rgba(255, 215, 168, 0.1), rgba(77, 171, 247, 0.1));
+            border-radius: 10px;
+            border-left: 4px solid #ffd8a8;
+            font-size: 1.2em;
+            color: #ffd8a8;
+        }
+
+        .dialog-footer {
+            background: rgba(0, 20, 40, 0.7);
+            padding: 25px;
+            text-align: center;
+            border-top: 2px solid #339af0;
+            flex-shrink: 0;
+        }
+
+        .new-year-button {
+            background: linear-gradient(to right, #2adb8f, #36ff5f);
+            color: #0c1b33;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(42, 219, 143, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .new-year-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(42, 219, 143, 0.6);
+            background: linear-gradient(to right, #36ff5f, #2adb8f);
+        }
+
+        .new-year-button:active {
+            transform: translateY(1px);
+        }
+
+        .new-year-button::after {
+            content: '🎉';
+            position: absolute;
+            right: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        /* Стили для гифки */
+        .gif-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .gif-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .gif-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.7),
+                        0 0 100px rgba(255, 0, 0, 0.5);
+            border: 5px solid #ffd700;
+            animation: gifPulse 2s infinite alternate;
+        }
+
+        @keyframes gifPulse {
+            0% { transform: scale(1); box-shadow: 0 0 50px rgba(255, 215, 0, 0.7); }
+            100% { transform: scale(1.03); box-shadow: 0 0 70px rgba(255, 215, 0, 0.9); }
+        }
+
+        .new-year-gif {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+        }
+
+        .close-gif {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 26px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2001;
+            transition: all 0.3s ease;
+        }
+
+        .close-gif:hover {
+            background: rgba(255, 0, 0, 0.9);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .gif-text {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #ffd700;
+            font-size: 2em;
+            font-weight: bold;
+            text-shadow: 0 0 10px red, 0 0 20px gold;
+            padding: 10px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            animation: textGlow 1.5s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px red, 0 0 20px gold; }
+            100% { text-shadow: 0 0 20px gold, 0 0 30px red, 0 0 40px white; }
+        }
+
+        .snowflake-animated {
+            position: absolute;
+            color: #a5d8ff;
+            opacity: 0.7;
+            font-size: 1em;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(105, 219, 124, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(105, 219, 124, 0.6); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .dialog-container {
+                width: 95%;
+                margin: 10px;
+                max-width: 500px;
+            }
+            
+            .dialog-content {
+                padding: 20px;
+                font-size: 1.05em;
+            }
+            
+            .dialog-header h1 {
+                font-size: 1.5em;
+            }
+            
+            .new-year-button {
+                padding: 14px 35px;
+                font-size: 1.1em;
+            }
+            
+            .dialog-header {
+                padding: 12px 15px;
+            }
+            
+            .snowflake {
+                font-size: 1em;
+            }
+            
+            .horse-speech {
+                margin: 15px 0;
+                padding: 12px;
+            }
+            
+            .gif-text {
+                font-size: 1.5em;
+            }
+            
+            .close-gif {
+                width: 40px;
+                height: 40px;
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dialog-container {
+                max-width: 400px;
+            }
+            
+            .dialog-header h1 {
+                font-size: 1.3em;
+            }
+            
+            .new-year-button {
+                padding: 12px 30px;
+                font-size: 1em;
+                width: 90%;
+                max-width: 250px;
+            }
+            
+            .story-text {
+                font-size: 1em;
+            }
+            
+            .dialog-content {
+                padding: 15px;
+            }
+            
+            .horse-speech {
+                margin: 12px 0;
+                font-size: 0.95em;
+            }
+            
+            .dialog-overlay {
+                padding: 10px;
+            }
+            
+            .gif-text {
+                font-size: 1.2em;
+                padding: 8px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .dialog-container {
+                max-height: 85vh;
+            }
+            
+            .dialog-header {
+                padding: 10px 15px;
+            }
+            
+            .dialog-content {
+                padding: 15px;
+            }
+            
+            .dialog-footer {
+                padding: 15px;
+            }
+            
+            .story-text {
+                margin-bottom: 12px;
+            }
+            
+            .new-year-gif {
+                max-height: 85vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Оверлей для гифки -->
+<div class="gif-overlay" id="gifOverlay">
+    <div class="gif-container">
+        <button class="close-gif" onclick="closeGif()">×</button>
+        <!-- ВАША ГИФКА ЗДЕСЬ -->
+        <img src="image/end.gif" alt="Новый Год" class="new-year-gif" id="newYearGif">
+        <div class="gif-text">С НОВЫМ ГОДОМ! 🎄✨</div>
+    </div>
+</div>
+
+<div class="dialog-overlay">
+    <div class="dialog-container">
+        <div class="dialog-header">
+            <div class="header-decoration">
+                <span class="snowflake">🎄</span>
+                <span class="snowflake">✨</span>
+                <span class="snowflake">🎄</span>
+            </div>
+            <h1>🎉 НОВОГОДНЕЕ ЧУДО 🎉</h1>
+            <div class="header-decoration">
+                <span class="snowflake">🎄</span>
+                <span class="snowflake">✨</span>
+                <span class="snowflake">🎄</span>
+            </div>
+        </div>
+        
+        <div class="dialog-content">
+            <p class="story-text">
+                <span class="character-name">Друзья</span> спасли 
+                <span class="character-name">Медвежонка</span> и выслушали 
+                <span class="character-name">Лошадь</span>. Оказалось, ей было просто одиноко и не хватало друзей.
+            </p>
+            
+            <div class="horse-speech">
+                «Я не хотела зла... Я тоже хотела праздника».
+            </div>
+            
+            <p class="story-text">
+                <span class="character-name">Друзья</span> поняли и простили её. 
+                Теперь они все вместе украшают ёлку, пьют горячий чай и ждут боя курантов.
+            </p>
+            
+            <div class="happy-ending">
+                Новый год наступил — самый дружный, потому что он у них общий.
+            </div>
+            
+            <p class="story-text">
+                🎄 Весь лес сияет огнями гирлянд<br>
+                🍪 На столе пахнет имбирным печеньем<br>
+                ☕ Горячий чай согревает сердца<br>
+                ❤️ А дружба — души
+            </p>
+            
+            <div class="final-message">
+                И пусть этот Новый год принесёт всем мир, радость и настоящую дружбу!
+            </div>
+        </div>
+        
+        <div class="dialog-footer">
+            <button class="new-year-button" onclick="showNewYearGif()">
+                Встретить Новый год!
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== ИНСТРУКЦИЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ ==========
+    // Чтобы вставить свою гифку, найдите в коде строку:
+    // <img src="https://i.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="Новый Год" class="new-year-gif" id="newYearGif">
+    // И замените URL (https://i.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif) на ссылку на вашу гифку
+    // =================================================
+
+    function createSnowflakes() {
+        const overlay = document.querySelector('.dialog-overlay');
+        for (let i = 0; i < 30; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake-animated';
+            snowflake.innerHTML = Math.random() > 0.5 ? '❄' : '✨';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.top = Math.random() * 100 + '%';
+            snowflake.style.animationDelay = Math.random() * 5 + 's';
+            snowflake.style.opacity = Math.random() * 0.6 + 0.3;
+            snowflake.style.fontSize = (Math.random() * 0.8 + 0.8) + 'em';
+            snowflake.style.animation = `sparkle ${Math.random() * 3 + 2}s infinite`;
+            overlay.appendChild(snowflake);
+        }
+    }
+
+    function showNewYearGif() {
+        const button = document.querySelector('.new-year-button');
+        const gifOverlay = document.getElementById('gifOverlay');
+        
+        // Анимация кнопки
+        button.style.transform = 'scale(0.95)';
+        button.disabled = true;
+        button.innerHTML = '🎊 С Новым годом! 🎊';
+        
+        // Эффект фейерверка
+        createFireworks();
+        
+        // Показать гифку через небольшую задержку
+        setTimeout(() => {
+            gifOverlay.classList.add('active');
+            createConfetti();
+        }, 800);
+        
+        // Восстановить кнопку
+        setTimeout(() => {
+            button.style.transform = '';
+            button.disabled = false;
+        }, 2000);
+    }
+
+    function closeGif() {
+        const gifOverlay = document.getElementById('gifOverlay');
+        gifOverlay.classList.remove('active');
+    }
+
+    // Закрытие гифки по клику вне контейнера
+    document.getElementById('gifOverlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeGif();
+        }
+    });
+
+    // Закрытие гифки по клавише ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('gifOverlay').classList.contains('active')) {
+            closeGif();
+        }
+    });
+
+    function createFireworks() {
+        const overlay = document.querySelector('.dialog-overlay');
+        const colors = ['#ff6b6b', '#ffa726', '#4cd964', '#5ac8fa', '#ff2d55', '#007aff'];
+        
+        for (let i = 0; i < 15; i++) {
+            setTimeout(() => {
+                const firework = document.createElement('div');
+                firework.innerHTML = '🎆';
+                firework.style.position = 'absolute';
+                firework.style.left = Math.random() * 80 + 10 + '%';
+                firework.style.top = Math.random() * 80 + 10 + '%';
+                firework.style.fontSize = Math.random() * 2 + 1.5 + 'em';
+                firework.style.color = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.zIndex = '2';
+                firework.style.opacity = '0';
+                firework.style.transform = 'scale(0)';
+                firework.style.transition = 'all 0.5s ease-out';
+                
+                overlay.appendChild(firework);
+                
+                // Анимация появления
+                setTimeout(() => {
+                    firework.style.opacity = '1';
+                    firework.style.transform = 'scale(1)';
+                }, 10);
+                
+                // Анимация исчезновения
+                setTimeout(() => {
+                    firework.style.opacity = '0';
+                    firework.style.transform = 'scale(0)';
+                }, 500);
+                
+                // Удаление из DOM
+                setTimeout(() => {
+                    if (firework.parentNode) {
+                        firework.parentNode.removeChild(firework);
+                    }
+                }, 1000);
+            }, i * 100);
+        }
+    }
+
+    function createConfetti() {
+        const gifOverlay = document.getElementById('gifOverlay');
+        const colors = ['#ff0000', '#ffd700', '#00ff00', '#00ffff', '#ff00ff', '#ffffff'];
+        
+        for (let i = 0; i < 100; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = Math.random() * 15 + 5 + 'px';
+                confetti.style.height = Math.random() * 15 + 5 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-20px';
+                confetti.style.zIndex = '2002';
+                confetti.style.opacity = '0.9';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                gifOverlay.appendChild(confetti);
+                
+                // Анимация падения
+                const animation = confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 50}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 2000 + 1000,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                });
+                
+                animation.onfinish = () => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                };
+            }, i * 30);
+        }
+    }
+
+    // Инициализация снежинок при загрузке
+    window.addEventListener('DOMContentLoaded', createSnowflakes);
+
+    // Плавный скроллинг для контента
+    const dialogContent = document.querySelector('.dialog-content');
+    let isScrolling = false;
+    
+    dialogContent.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        
+        if (!isScrolling) {
+            isScrolling = true;
+            const delta = e.deltaY * 0.5;
+            
+            this.scrollBy({
+                top: delta,
+                behavior: 'smooth'
+            });
+            
+            setTimeout(() => {
+                isScrolling = false;
+            }, 100);
+        }
+    });
+    
+    // Поддержка touch-событий для мобильных
+    let touchStartY = 0;
+    
+    dialogContent.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    dialogContent.addEventListener('touchmove', function(e) {
+        if (e.cancelable) {
+            e.preventDefault();
+        }
+        const touchY = e.touches[0].clientY;
+        const deltaY = touchStartY - touchY;
+        
+        this.scrollTop += deltaY * 1.5;
+        touchStartY = touchY;
+    }, { passive: false });
+</script>
+
+</body>
+</html>

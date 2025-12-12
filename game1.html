@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новогодний пазл</title>
+    <link rel="stylesheet" href="game1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Анимация снега -->
+    <div class="snow" id="snow"></div>
+   
+    <div class="header">
+        <h1><i class="fas fa-tree"></i> Новогодний пазл <i class="fas fa-snowflake"></i></h1>
+        <p class="subtitle">Соберите новогодний пазл из 16 элементов</p>
+    </div>
+   
+    <div class="main-game-area">
+        <div class="left-panel">
+            <div class="game-board-container">
+                <div class="game-board" id="game-board">
+                    <!-- Область сборки с сеткой 4x4 -->
+                    <div class="assembly-area" id="assembly-area">
+                        <div class="border-label">Область сборки</div>
+                        <div class="assembly-grid" id="assembly-grid">
+                            <!-- 16 ячеек сетки будут созданы через JavaScript -->
+                        </div>
+                    </div>
+                    <!-- Пазлы будут добавлены через JavaScript -->
+                </div>
+            </div>
+        </div>
+       
+        <div class="right-panel">
+            <div class="reference-image-container">
+                <h3>Образец для сборки</h3>
+                <img src="image/pazzl_1.jpg"Новогодний пазл" class="reference-image" id="reference-image">
+            </div>
+           
+            <div class="controls">
+                <div class="image-change-section">
+                    <h3>Уровень: <span id="current-level">1</span></h3>
+                    <button class="btn-change-image" id="change-image-btn">
+                        <i class="fas fa-sync-alt"></i> Случайная картинка
+                    </button>
+                </div>
+               
+                <div class="game-stats">
+                    <h3>Статистика игры</h3>
+                    <div class="stats-container">
+                        <div class="stat">
+                            <div class="stat-value" id="time">00:00</div>
+                            <div class="stat-label">Время</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="connected">0/16</div>
+                            <div class="stat-label">Собрано</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="win-message" id="win-message">
+        <div class="win-content">
+            <h2><i class="fas fa-trophy"></i> Поздравляем!</h2>
+            <p class="win-description">Вы разрушили стену, молодец!</p>
+           
+            <div class="win-stats">
+                <div class="win-stat">
+                    <div class="win-stat-value" id="win-time">00:00</div>
+                    <div>Время сборки</div>
+                </div>
+                <div class="win-stat">
+                    <div class="win-stat-value" id="win-level">1</div>
+                    <div>Уровень</div>
+                </div>
+            </div>
+           <button class="btn-close" id="close-win" onclick="document.location='game2.html'"><i class="fas fa-forward"></i>Следующий уровень</button>
+            
+        </div>
+    </div>
+   
+    <!-- Модальное окно с инструкцией -->
+    <div class="instruction-modal" id="instruction-modal">
+        <div class="instruction-content">
+            <h2><i class="fas fa-info-circle"></i> Нужно разрушить стену!</h2>
+            <div class="instruction-text">
+                <p>Лошадь возвела стену, чтобы скрыть новогоднее волшебство!</p>
+                <p><strong>Ваша задача:</strong> Собрать пазл из 16 элементов, чтобы разрушить стену и вернуть праздник!</p>
+                <div class="instruction-tips">
+                    <p><i class="fas fa-lightbulb"></i> Подсказки:</p>
+                    <ul>
+                        <li>Перетаскивайте кусочки пазла в область сборки</li>
+                        <li>Когда пазл соберется правильно, он зафиксируется на месте</li>
+                        <li>Соединенные пазлы двигаются вместе</li>
+                        <li>Соберите всю картинку, чтобы разрушить стену!</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn-start-game" id="start-game-btn">
+                <i class="fas fa-play"></i> Начать игру
+            </button>
+        </div>
+    </div>
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-image-container">
+                <!-- Здесь будет ваша картинка -->
+                <img src="image/main.jpg" alt="Загрузка игры" class="loading-image" id="loading-image">
+            </div>
+            <div class="loading-text">
+                <h3><i class="fas fa-spinner fa-spin"></i> Загрузка новогодней игры...</h3>
+                <p>Подготовка волшебства, пожалуйста, подождите</p>
+            </div>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
+        </div>
+    </div>
+    <script src="game1.js"></script>
+                          
+</body>
+</html>

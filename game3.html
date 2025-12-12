@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Новогодний Шарик</title>
+    <link rel="stylesheet" href="game3.css">
+</head>
+<body>
+    <div class="game-header">
+        <div class="score-container">
+            <div class="score-title">СЧЕТ</div>
+            <div id="score" class="score-value">0</div>
+        </div>
+        <div class="goal-container">
+            <div class="goal-title">ЦЕЛЬ</div>
+            <div id="goal" class="goal-value">1000</div>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="mobile-controls">
+            <div class="mobile-btn" id="leftBtn">←</div>
+            <div class="mobile-btn" id="rightBtn">→</div>
+        </div>
+        
+        <div class="modal" id="startModal">
+            <div class="modal-content">
+                <h2>🎄 НОВОГОДНЕЕ ПРИКЛЮЧЕНИЕ 🎄</h2>
+                <p class="modal-text">Достань медвежонка на вершине!</p>
+                <p class="modal-instruction">Поднимайся по платформам и набери 1000 очков, чтобы спасти медвежонка!</p>
+                <div class="modal-controls">
+                    <div class="control-item">
+                        <span class="control-icon">🎯</span>
+                        <span>Особые платформы дают больше очков</span>
+                    </div>
+                </div>
+                <button class="btn btn-start" id="startGameBtn">Начать игру</button>
+            </div>
+        </div>
+        
+        <div class="modal" id="gameOverModal">
+            <div class="modal-content">
+                <h2>🎮 ИГРА ОКОНЧЕНА 🎮</h2>
+                <p class="modal-score">Ваш счет: <span id="finalScoreModal" class="final-score">0</span></p>
+                <p class="modal-text">Шарик упал с платформ!</p>
+                <p class="modal-instruction">Попробуйте еще раз и достаньте медвежонка!</p>
+                <button class="btn btn-restart" id="restartGameBtn">Начать снова</button>
+            </div>
+        </div>
+        
+        <div class="modal" id="victoryModal">
+            <div class="modal-content">
+                <h2>🎉 ПОБЕДА! 🎉</h2>
+                <div class="bear-image">
+                    <img src="image/win.png" alt="Новогодний медведь">
+                </div>
+                <p class="modal-text">Вы достигли цели в 1000 очков!</p>
+                <p class="modal-score">Ваш счет: <span id="victoryScore" class="victory-score">0</span></p>
+                <p class="modal-instruction">Поздравляем! Вы спасли медвежонка!</p>
+                <div class="victory-buttons">
+                    <button class="btn btn-victory-next" id="victoryNextBtn">Дальше</button>
+                    <button onclick="document.location='end.html'" class="btn btn-victory-restart" id="victoryRestartBtn">УРААА!!</button>
+                    
+                </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="btn" id="pauseBtn">⏸ Пауза</button>
+    </div>
+
+    <script src="game3.js"></script>
+</body>
+</html>

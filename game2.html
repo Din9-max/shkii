@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Снежки и огоньи - Игра</title>
+    <link rel="stylesheet" href="game2.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Снежки и огоньки</h1>
+        <p class="subtitle">Тушите огоньки снежками! Игра ускоряется с ростом счёта!</p>
+    </div>
+
+    <div class="game-container">
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">Очков</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="fires-count">0</div>
+                <div class="stat-label">Огоньков</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="snowballs-left">50</div>
+                <div class="stat-label">Снежков</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="accuracy">100%</div>
+                <div class="stat-label">Точность</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-text">Цель: 100 очков</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area" id="game-area">
+            <div class="snow-effect" id="snow-effect"></div>
+            <!-- Метатель снежков -->
+            <div class="snowball-thrower" id="snowball-thrower">
+                <div class="thrower-circle" id="thrower-circle"></div>
+            </div>
+            <!-- Индикатор скорости -->
+            <div class="speed-indicator" id="speed-indicator">Скорость: 1x</div>
+            <!-- Предупреждение -->
+            <div class="warning-message" id="warning-message">⚠️ Слишком много огоньков! ⚠️</div>
+            <!-- Огоньки и снежки будут генерироваться здесь -->
+            
+            <div class="game-over" id="game-over">
+                <h2 id="game-over-title">Игра окончена!</h2>
+                <p id="final-score">Вы набрали 0 очков</p>
+                <p id="final-accuracy">Точность: 100%</p>
+                <p id="final-speed">Максимальная скорость: 1x</p>
+                <p id="lose-reason"></p>
+                <button id="restart-button">Играть снова</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="start-button">Начать игру</button>
+            <button id="pause-button">Пауза</button>
+        </div>
+
+    </div>
+
+    <!-- Модальное окно перед началом игры -->
+    <div class="modal-overlay" id="start-modal-overlay" style="display: flex;">
+        <div class="modal-content start-modal">
+            <h2 style="color: #2a8fdb; margin-bottom: 15px; text-align: center;">🚨 ВНИМАНИЕ! 🚨</h2>
+            <p style="margin-bottom: 15px; font-size: 1.1rem; line-height: 1.4; text-align: center;">
+                <strong>Необходимо потушить все огоньки, которые оставила за собой лошадь!</strong>
+            </p>
+            
+            <div class="rules-container">
+                <h3 style="color: #ff6b6b; margin-bottom: 10px; text-align: center;">Краткие правила:</h3>
+                <ul style="text-align: left; padding-left: 20px; margin-bottom: 20px;">
+                    <li>🎯 <strong>Цель:</strong> Набрать 100 очков</li>
+                    <li>🔥 <strong>Огоньки:</strong> Тушите снежками</li>
+                    <li>❄️ <strong>Снежки:</strong> У вас 50 снежков</li>
+                    <li>🎮 <strong>Управление:</strong> Кликайте/тапайте по экрану</li>
+                    <li>⚡ <strong>Скорость:</strong> Игра ускоряется с ростом счёта</li>
+                    <li>⚠️ <strong>Опасность:</strong> Более 10 огоньков = проигрыш</li>
+                    <li>🎉 <strong>Хитбокс:</strong> В 3 раза больше огонька - попадать легко!</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center;">
+                <button id="start-modal-button" style="font-size: 1.2rem; padding: 12px 30px; margin-top: 10px;">
+                    🎮 Начать игру!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно после победы -->
+    <div class="modal-overlay win" id="win-modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2 style="color: #2a8fdb; margin-bottom: 15px;">🎉 ПОБЕДА! 🎉</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1rem; line-height: 1.4;">
+                Еще немного и мы спасем медвежонка!
+            </p>
+            <button onclick="document.location='game3.html'" id="next-level-button" style="font-size: 1.2rem; padding: 12px 30px;"><i class="fas fa-forward"></i>
+                Следующий уровень
+            </button>
+        </div>
+    </div>
+
+    <script src="game2.js"></script>
+</body>
+</html>
